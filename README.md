@@ -242,4 +242,39 @@ nova-lang/
 
 ---
 
+## Steps to Test
+
+### Using VS Code (Recommended)
+1. Open any `.nova` file (e.g., `sort.nova` or `simple_math.nova`).
+2. Press **`Ctrl + Shift + B`** to open the Build Tasks menu.
+3. Select **"Compile and Run (active file)"**.
+4. The terminal will automatically compile the code to LLVM IR, link it with any necessary helpers, and execute the resulting binary.
+
+*Alternatively:*
+- Press **`Ctrl + Shift + P`** to open the Command Palette.
+- Type **"Run Task"** and select it.
+- Choose **"Compile and Run (active file)"**.
+
+### Using the Terminal (PowerShell)
+If you prefer running commands manually in the terminal:
+
+1. **Compile the Nova file to LLVM IR:**
+   ```powershell
+   .\nova_compiler.exe --emit-ir your_file.nova -o your_file.ll
+   ```
+2. **Compile the IR to an EXE:**
+   ```powershell
+   # Standard:
+   clang your_file.ll -o your_file.exe
+   
+   # With helpers (required for sort.nova):
+   clang your_file.ll helpers.c -o your_file.exe
+   ```
+3. **Run the EXE:**
+   ```powershell
+   .\your_file.exe
+   ```
+
+---
+
 *Built with ❤️ in C — because the best compilers are written close to the metal.*
