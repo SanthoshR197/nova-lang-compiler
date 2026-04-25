@@ -126,36 +126,7 @@ let n: i64 = f as i64;
 
 ---
 
-## Quick Start
-
-### Prerequisites
-
-- **LLVM / Clang**: Download the installer from the [LLVM Project](https://github.com/llvm/llvm-project/releases) or install via `winget install LLVM.LLVM`.
-- **C Compiler**: Clang (included with LLVM) or MSVC.
-
-### Build the Compiler
-
-```powershell
-# Compile the Nova compiler driver using Clang
-clang -std=c11 -Wall -Wextra -Wno-unused-function -Iinclude -g src/*.c -o nova_compiler.exe
-```
-
-### Compile a Nova Program
-
-```powershell
-# 1. Generate LLVM IR from Nova source
-.\nova_compiler.exe --emit-ir examples\showcase.nova -o showcase.ll
-
-# 2. Compile IR to native Windows executable
-# Note: If using external helpers, include them in the link step:
-# clang showcase.ll helpers.c -o showcase.exe
-clang showcase.ll -o showcase.exe
-
-# 3. Run the program
-.\showcase.exe
-```
-
-### Advanced Options
+ 
 
 ```powershell
 # Dump AST (Abstract Syntax Tree)
@@ -167,19 +138,6 @@ clang showcase.ll -o showcase.exe
 # With optimization (via Clang)
 clang -O2 showcase.ll -o showcase_fast.exe
 ```
-
-### Run Tests
-
-You can run the full test suite using the pre-configured VS Code task or manually via PowerShell:
-
-```powershell
-# Run the test suite (requires Clang in PATH)
-# This iterates through tests/*.nova and verifies LLVM IR generation
-.\nova_compiler.exe --emit-ir tests/arith.nova -o tests/arith.ll
-# ... etc
-```
-
----
 
 ## VS Code Setup
 
@@ -218,30 +176,6 @@ nova-lang/
 ├── Makefile
 └── README.md
 ```
-
----
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-feature`
-3. Add tests in `tests/`
-4. Run `make test`
-5. Submit a pull request
-
-### Roadmap
-
-- [ ] LLVM C API integration (replace textual IR)
-- [ ] Closures / first-class functions
-- [ ] Generics / parametric types
-- [ ] Module system
-- [ ] Standard library (nova-std)
-- [ ] Self-hosting (compile Nova with Nova)
-- [ ] WASM backend
-- [ ] LSP server for IDE integration
-
----
-
 ## Steps to Test
 
 ### Using VS Code (Recommended)
@@ -277,4 +211,4 @@ If you prefer running commands manually in the terminal:
 
 ---
 
-*Built with ❤️ in C — because the best compilers are written close to the metal.*
+
