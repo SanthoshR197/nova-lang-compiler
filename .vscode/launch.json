@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug novac",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/novac",
+            "args": ["--ast", "examples/showcase.nova"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "Build Nova Compiler",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Debug novac (emit IR)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/novac",
+            "args": ["--emit-ir", "examples/showcase.nova", "-o", "showcase.ll"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "Build Nova Compiler"
+        }
+    ]
+}

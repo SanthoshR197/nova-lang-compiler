@@ -1,0 +1,68 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Nova Compiler",
+            "type": "shell",
+            "command": "clang -std=c11 -Wall -Wextra -Wno-unused-function -Iinclude -g src/diag.c src/ast.c src/lexer.c src/parser.c src/sema.c src/codegen.c src/main.c -o nova_compiler.exe",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "Remove-Item nova_compiler.exe, *.ll, *.exe, tests\\*.ll, tests\\*.exe -ErrorAction SilentlyContinue",
+            "group": "build"
+        },
+        {
+            "label": "Run Tests",
+            "type": "shell",
+            "command": "$tests = 'hello', 'arith', 'control', 'fib', 'structs', 'loops', 'strings'; $pass=0; $fail=0; foreach ($t in $tests) { $out = .\\nova_compiler.exe --emit-ir -o \"tests\\$t.ll\" \"tests\\$t.nova\" 2>&1; if ($LASTEXITCODE -eq 0) { Write-Host \"$t PASS\" -ForegroundColor Green; $pass++ } else { Write-Host \"$t FAIL\" -ForegroundColor Red; $fail++ } }; Write-Host \"Passed: $pass Failed: $fail\"",
+            "group": "test",
+            "dependsOn": "Build Nova Compiler",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Emit IR (active file)",
+            "type": "shell",
+            "command": ".\\nova_compiler.exe --emit-ir '${file}' -o '${fileBasenameNoExtension}.ll'; Get-Content '${fileBasenameNoExtension}.ll'",
+            "group": "build",
+            "dependsOn": "Build Nova Compiler"
+        },
+        {
+            "label": "Compile and Run (active file)",
+            "type": "shell",
+            "command": ".\\nova_compiler.exe --emit-ir '${file}' -o '${fileBasenameNoExtension}.ll'; clang '${fileBasenameNoExtension}.ll' helpers.c -o '${fileBasenameNoExtension}.exe'; & '.\\${fileBasenameNoExtension}.exe'",
+            "group": "build",
+            "dependsOn": "Build Nova Compiler",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Dump AST (active file)",
+            "type": "shell",
+            "command": ".\\nova_compiler.exe --ast '${file}'",
+            "group": "build",
+            "dependsOn": "Build Nova Compiler"
+        },
+        {
+            "label": "Dump Tokens (active file)",
+            "type": "shell",
+            "command": ".\\nova_compiler.exe --tokens '${file}'",
+            "group": "build",
+            "dependsOn": "Build Nova Compiler"
+        }
+    ]
+}

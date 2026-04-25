@@ -1,0 +1,19 @@
+# Compiled executables
+*.exe
+novac
+a.out
+
+# LLVM Intermediate Representation
+*.ll
+
+# Debugging and profiling files
+*.pdb
+*.ilk
+
+# Object files
+*.o
+*.obj
+
+# OS generated files
+.DS_Store
+Thumbs.db
