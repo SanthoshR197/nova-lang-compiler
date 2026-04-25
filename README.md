@@ -5,7 +5,6 @@
 [![Build](https://img.shields.io/badge/build-passing-brightgreen)](#)
 [![Language](https://img.shields.io/badge/language-C11-blue)](#)
 [![Backend](https://img.shields.io/badge/backend-LLVM-orange)](#)
-[![License](https://img.shields.io/badge/license-MIT-green)](#)
 
 ---
 
@@ -25,7 +24,7 @@
                                                                                      │
                                                                               ┌──────▼──────┐
                                                                               │ clang/gcc   │
-                                                                              │ Native ELF  │
+                                                                              │ Native EXE  │
                                                                               └─────────────┘
 ```
 
@@ -131,71 +130,53 @@ let n: i64 = f as i64;
 
 ### Prerequisites
 
-```bash
-# Ubuntu / Debian
-sudo apt update
-sudo apt install gcc llvm clang make
+- **LLVM / Clang**: Download the installer from the [LLVM Project](https://github.com/llvm/llvm-project/releases) or install via `winget install LLVM.LLVM`.
+- **C Compiler**: Clang (included with LLVM) or MSVC.
 
-# macOS
-brew install llvm gcc
-```
+### Build the Compiler
 
-### Build
-
-```bash
-git clone https://github.com/yourname/nova-lang
-cd nova-lang
-make
+```powershell
+# Compile the Nova compiler driver using Clang
+clang -std=c11 -Wall -Wextra -Wno-unused-function -Iinclude -g src/*.c -o nova_compiler.exe
 ```
 
 ### Compile a Nova Program
 
-```bash
-# Full pipeline: .nova → native binary
-./novac examples/showcase.nova -o showcase
-./showcase
+```powershell
+# 1. Generate LLVM IR from Nova source
+.\nova_compiler.exe --emit-ir examples\showcase.nova -o showcase.ll
 
-# Emit LLVM IR only
-./novac --emit-ir examples/showcase.nova -o showcase.ll
-cat showcase.ll
+# 2. Compile IR to native Windows executable
+# Note: If using external helpers, include them in the link step:
+# clang showcase.ll helpers.c -o showcase.exe
+clang showcase.ll -o showcase.exe
 
-# Emit assembly only
-./novac --emit-asm examples/showcase.nova -o showcase.s
+# 3. Run the program
+.\showcase.exe
+```
 
-# Dump AST
-./novac --ast examples/showcase.nova
+### Advanced Options
 
-# Dump token stream
-./novac --tokens examples/showcase.nova
+```powershell
+# Dump AST (Abstract Syntax Tree)
+.\nova_compiler.exe --ast examples\showcase.nova
 
-# With optimization
-./novac -O2 examples/showcase.nova -o showcase_fast
+# Dump Token Stream
+.\nova_compiler.exe --tokens examples\showcase.nova
 
-# Verbose mode
-./novac -v examples/showcase.nova
+# With optimization (via Clang)
+clang -O2 showcase.ll -o showcase_fast.exe
 ```
 
 ### Run Tests
 
-```bash
-make test
-```
+You can run the full test suite using the pre-configured VS Code task or manually via PowerShell:
 
-Expected output:
-```
-══════════════════════════════════════════
-  Nova Compiler — Test Suite
-══════════════════════════════════════════
-  hello                PASS (IR)
-  arith                PASS (IR)
-  control              PASS (IR)
-  fib                  PASS (IR)
-  structs              PASS (IR)
-  loops                PASS (IR)
-  strings              PASS (IR)
-
-  Passed: 7  Failed: 0
-══════════════════════════════════════════
+```powershell
+# Run the test suite (requires Clang in PATH)
+# This iterates through tests/*.nova and verifies LLVM IR generation
+.\nova_compiler.exe --emit-ir tests/arith.nova -o tests/arith.ll
+# ... etc
 ```
 
 ---
@@ -258,12 +239,6 @@ nova-lang/
 - [ ] Self-hosting (compile Nova with Nova)
 - [ ] WASM backend
 - [ ] LSP server for IDE integration
-
----
-
-## License
-
-MIT License — see [LICENSE](LICENSE).
 
 ---
 
